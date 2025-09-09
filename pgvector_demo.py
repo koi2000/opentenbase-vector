@@ -1,6 +1,6 @@
 """
-pgvector 产品推荐系统 Demo
-基于向量相似度的产品推荐系统，使用PostgreSQL + pgvector扩展
+OpenTenbase 产品推荐系统 Demo
+基于向量相似度的产品推荐系统, 使用OpenTenbase + pgvector扩展
 """
 
 import os
@@ -69,7 +69,7 @@ class ProductRecommendationSystem:
         CREATE TABLE IF NOT EXISTS user_behaviors (
             id SERIAL PRIMARY KEY,
             user_id INTEGER NOT NULL,
-            product_id INTEGER REFERENCES products(id),
+            product_id INTEGER NOT NULL,
             action_type VARCHAR(50) NOT NULL, -- 'view', 'like', 'purchase', 'add_to_cart'
             rating INTEGER CHECK (rating >= 1 AND rating <= 5),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -292,16 +292,6 @@ class ProductRecommendationSystem:
         """
         基于用户历史行为推荐产品
         """
-        # 注册 vector 类型（只需要一次，可以放在初始化里）
-        # 如果你已经在 __init__ 中注册过，这里就不需要重复
-        # try:
-        #     from pgvector.psycopg2 import register_vector
-        #     register_vector(self.conn)
-        # except ImportError:
-        #     print("请安装 pgvector: pip install pgvector")
-        #     return []
-        # except Exception:
-        #     pass  # 已注册则忽略
 
         cur = self.conn.cursor()
 
@@ -543,13 +533,13 @@ def main():
         
         # 6. 演示语义搜索
         print("\n🔍 演示1: 语义搜索")
-        print("搜索查询: '适合办公的轻薄电脑'")
-        search_results = recommender.semantic_search("适合办公的轻薄电脑", limit=3)
+        print("搜索查询: '适合办公的轻薄笔记本电脑'")
+        search_results = recommender.semantic_search("适合办公的轻薄笔记本电脑", limit=3)
         print(format_products(search_results))
         
         # 7. 演示个性化推荐
         print("\n🎯 演示2: 基于用户历史的个性化推荐")
-        print("为用户1推荐产品（该用户喜欢iPhone和AirPods）:")
+        print("为用户1推荐产品(该用户喜欢iPhone和AirPods):")
         user_recommendations = recommender.recommend_by_user_history(user_id=1, limit=3)
         print(format_products(user_recommendations))
         
@@ -605,10 +595,10 @@ if __name__ == "__main__":
     """
     
     print("""
-    🛍️  pgvector + OpenTenBase 产品推荐系统演示
+    🛍️  OpenTenbase + pgvector 产品推荐系统演示
     ===============================================
     
-    本Demo展示了如何使用OpenTenBase + pgvector构建一个完整的产品推荐系统，包括：
+    本Demo展示了如何使用OpenTenBase + pgvector构建一个完整的产品推荐系统, 包括:
     ✨ 本地文本嵌入向量生成
     ✨ OpenTenBase向量数据库存储
     ✨ 高效向量索引
