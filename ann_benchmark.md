@@ -4,3 +4,6 @@
 
 下图为postgres的测试结果
 ![alt text](./images/pg_ann.png)
+
+OpenTenbase的测试结果如下：
+![alt text](./images/openten_ann.png)
